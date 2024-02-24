@@ -37,19 +37,13 @@ app.post('/signup', async (req,res) => {
     }
     
 })
-app.post('/login', async (req,res) =>{
+app.post('/login', (req,res) =>{
     const email = req.body.email
     const password = req.body.password
     const sql = "SELECT * From users Where email = ? and password = ?";
-    db.query(sql,[email, password], async (err,result) =>{
+    db.query(sql,[email, password], (err,result) =>{
         if(err) return res.json({loginStatus: false, Error: "Query error"})
         if(result.length > 0){
-
-            const user = result[0];
-            const passwordMatch = await bcrypt.compare(password, user.password);
-
-
-
             const id = result[0].id;
             const token = jwt.sign(
                 {role: "user", id: id},

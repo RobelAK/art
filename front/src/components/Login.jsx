@@ -11,15 +11,14 @@ function Login() {
         setPassword(event.target.value)
     }
     const values = {
-        email: email,
+        email: email, 
         password: password,
     }
     const handleSubmit = (event) =>{
         event.preventDefault();
         axios.post('http://localhost:8081/login', values)
-        .then((response) =>{
-            console.log(response)
-        })
+        .then(result => console.log(result))
+        .catch(err => console.log(err)) 
     }
   return (
     <div>
