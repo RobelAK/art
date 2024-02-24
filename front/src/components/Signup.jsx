@@ -11,7 +11,7 @@ function Signup() {
         setName(event.target.value)
     }
     const handleEmail = (event) =>{
-        setEmail(event.target.value)
+        setEmail(event.target.value) 
     }
     const handlePassword = (event) =>{
         setPassword(event.target.value)
@@ -24,7 +24,7 @@ function Signup() {
     const handleSubmit = (event) =>{
         event.preventDefault();
         axios.post('http://localhost:8081/signup', values)
-        .then(res => console.log("Registered succefully!!"))
+        .then(res => console.log(res))
         .catch(err => console.log(err));
     }
   return (

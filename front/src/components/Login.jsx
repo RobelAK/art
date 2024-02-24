@@ -17,8 +17,8 @@ function Login() {
     const handleSubmit = (event) =>{
         event.preventDefault();
         axios.post('http://localhost:8081/login', values)
-        .then(result => console.log(result))
-        .catch(err => console.log(err)) 
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
     }
   return (
     <div>
