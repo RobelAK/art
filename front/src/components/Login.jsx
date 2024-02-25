@@ -1,5 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 
 function Login() {
     const [email, setEmail] = useState('')
@@ -14,6 +16,9 @@ function Login() {
         email: email, 
         password: password,
     }
+    
+    const navigate = useNavigate()
+
     const handleSubmit = (event) =>{
         event.preventDefault();
         axios.post('http://localhost:8081/login', values)

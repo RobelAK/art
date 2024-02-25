@@ -43,7 +43,7 @@ app.post('/login', (req,res) =>{
     const email = req.body.email
     const password = req.body.password
     const sql = "SELECT * From users Where email = ? and password = ?";
-    db.query(sql,[email, password], async (err,result) =>{
+    db.query(sql,[email, password], async (err,result) =>{ 
         if(err) return res.json({loginStatus: false, Error: "Query error"})
         if(result.length > 0){
             const id = result[0].id;
