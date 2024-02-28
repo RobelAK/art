@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 function Signup() {
 
@@ -24,7 +25,14 @@ function Signup() {
     const handleSubmit = (event) =>{
         event.preventDefault();
         axios.post('http://localhost:8081/signup', values)
-        .then(res => console.log(res))
+        .then(res => {
+            if(res.data.signup){
+                alert(res.data.Message)
+            }
+            else{
+                alert(res.data.Message)
+            }
+        })
         .catch(err => console.log(err));
     }
   return (
@@ -32,18 +40,19 @@ function Signup() {
         <form onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="name">Name</label>
-                <input type="text" name="name" onChange={handleName}/>
+                <input type="text" name="name" onChange={handleName} required/>
             </div>
             <div>
                 <label htmlFor="email">Email</label>
-                <input type="email" name="email" onChange={handleEmail}/>
+                <input type="email" name="email" onChange={handleEmail} required/>
             </div>
             <div>
                 <label htmlFor="password">Password</label>
-                <input type="password" name="password" onChange={handlePassword}/>
+                <input type="password" name="password" onChange={handlePassword} required/>
             </div>
             <button type="submit">Signup</button>
-        </form> <br /><br /><br /><br /><br />
+        </form>
+        <Link to='/login'>Already have an account</Link>
     </div>
   )
 }

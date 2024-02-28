@@ -1,7 +1,6 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-
+import { useNavigate, Link} from 'react-router-dom'
 
 function Login() {
     const [email, setEmail] = useState('')
@@ -18,26 +17,42 @@ function Login() {
     }
     
     const navigate = useNavigate()
-
+    axios.defaults.withCredentials = true
+    const [error, setError] = useState(null)
     const handleSubmit = (event) =>{
         event.preventDefault();
         axios.post('http://localhost:8081/login', values)
-        .then(res => console.log(res))
+        .then(res => {
+            const token = res.data.token;
+            if(res.data.loginStatus){ 
+                localStorage.setItem("token", token)
+                navigate('/profile')
+            }
+            else{
+                // alert(res.data.Error)
+                toast.success('something')
+            }
+            // console.log(res.data)
+        })
         .catch(err => console.log(err));
     }
   return (
     <div>
         <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="email">Email</label>
-                <input type="email" name="email" onChange={handleEmail}/>
+            <div className='mb3'>
+                <label htmlFor="email" className='form-label'>Email</label>
+                <input type="email" name="email" onChange={handleEmail} required/>
             </div>
-            <div>
+            <div className='mb3'>
                 <label htmlFor="password">Password</label>
-                <input type="password" name="password" onChange={handlePassword}/>
+                <input type="password" name="password" onChange={handlePassword} required/>
             </div>
             <button type="submit">Login</button>
         </form>
+        <div className="text-warning">
+            {error && error}
+        </div>
+        <Link to='/signup'>Dont have an account</Link>
     </div>
   )
 }

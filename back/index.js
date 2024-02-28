@@ -2,7 +2,9 @@ import express from 'express'
 import mysql from 'mysql'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
-// import bcrypt from 'bcrypt'
+import cookieParser from 'cookie-parser'
+import bcrypt from 'bcrypt'
+
 
 const app = express()
 app.use(cors({
@@ -10,7 +12,8 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT'],   
     credentials: true
 }))
-app.use(express.json());
+app.use(express.json())
+app.use(cookieParser())
 
 
 const db = mysql.createConnection({
@@ -24,18 +27,19 @@ const db = mysql.createConnection({
 
 app.post('/signup', (req,res) => {
     const check = "SELECT * From users where email = ?";
+    const {email,name,password} = req.body
     db.query(check,[req.body.email], (err,result) =>{
-        if(err) return res.json({Error: "Query error"})
+        if(err) return res.json({Message: "Query error"})
         if(result.length == 0){
             const sql = "INSERT INTO users (`name`,`email`,`password`) Values (?,?,?)"; 
             db.query(sql,[req.body.name, req.body.email, req.body.password], (err,data) =>{
                 if(err) return res.json({Error: "query error"});
-                return res.json({data});
+                return res.json({signup: true,Message: 'You have Registered successfuly'});
                 
             })
-        }
+        } 
         else{
-            return res.json({Error: "Email already exist"})
+            return res.json({signup: false,Message: "Email already exist"})
         }
     })
 })
@@ -43,28 +47,32 @@ app.post('/login', (req,res) =>{
     const email = req.body.email
     const password = req.body.password
     const sql = "SELECT * From users Where email = ? and password = ?";
-    db.query(sql,[email, password], async (err,result) =>{ 
+    db.query(sql,[email, password], (err,result) =>{ 
         if(err) return res.json({loginStatus: false, Error: "Query error"})
         if(result.length > 0){
             const id = result[0].id;
+            const email = result[0].email;
+            const name = result[0].name
+            const password = result[0].password
             const token = jwt.sign(
-                {role: "user", id: id},
+                {id,name,email,password},
                 "jwt_secret_key",
                 {expiresIn: "1d"}
             );
-            res.cookie("token", token)
-            return res.json({loginStatus: true}) 
+            res.cookie(id, token)
+            return res.json({loginStatus: true, token,user: {id: id,email: email}}) 
 
         }
         else{
             return res.json({loginStatus: false, Error: "Wrong email or password"}) 
         }
     })
+}) 
+
+
+app.get('/profile', (req,res) =>{
+    
 })
-
-
-
-
 
 
 app.listen(8081,()=> {
