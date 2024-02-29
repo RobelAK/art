@@ -16,7 +16,7 @@ function App() {
       <Route path='/signup' element={<Signup/>}></Route>
       <Route path='/profile' element={<Profile/>}></Route>
     </Routes>
-    <ToastContainer />
+    {/* <ToastContainer /> */}
     </BrowserRouter>
   )
 }
